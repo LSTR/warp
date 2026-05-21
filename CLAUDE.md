@@ -14,22 +14,30 @@ If you haven't added the upstream remote yet:
 git remote add upstream https://github.com/warpdotdev/warp.git
 ```
 
-## Building
+## Install (first time or after major changes)
+Run from the repo root — handles all dependencies, builds, and copies to `/Applications/`:
 ```bash
-./script/bootstrap   # first-time setup
-./script/run         # build and run
-./script/presubmit   # fmt + clippy + tests before committing
+./install.sh
 ```
 
-Bundle the lightweight personal app:
+## Rebuild and run (day-to-day)
+Run from `app/` — skips dependency setup, just rebuilds and opens:
 ```bash
+cd app
 cargo bundle --bin warp-lstr --no-default-features --features lstr
+open ../target/debug/bundle/osx/WarpLstr.app
 ```
 
-Output lands in `target/debug/bundle/osx/WarpLstr.app` — copy to `/Applications/` to install alongside the main Warp app.
+Output lands in `target/debug/bundle/osx/WarpLstr.app` (workspace root `target/`, not `app/target/`).
 
-To build the full OSS build instead:
+## Syncing the installed app after a rebuild
 ```bash
+cp -r target/debug/bundle/osx/WarpLstr.app /Applications/
+```
+
+## Building the full OSS build instead
+```bash
+cd app
 cargo bundle --bin warp-oss
 ```
 
@@ -38,3 +46,6 @@ This fork builds as **WarpLstr** (`dev.warp.WarpLstr`) so it installs and runs i
 
 ## Customizations on this branch
 - App renamed to WarpLstr (bundle identifier: `dev.warp.WarpLstr`)
+- Lightweight feature set: core terminal + multi-profile + light AI, no cloud/sentry/rquickjs
+- Sign-up screen bypassed (`skip_login`, `skip_firebase_anonymous_user`)
+- `ToggleConversationListView` menu item guarded by its feature flag to prevent startup crash
