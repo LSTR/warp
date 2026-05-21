@@ -23,6 +23,11 @@ path = "src/bin/oss.rs"
 test = false
 
 [[bin]]
+name = "warp-lstr"
+path = "src/bin/oss.rs"
+test = false
+
+[[bin]]
 name = "warp"
 path = "src/bin/local.rs"
 test = false
@@ -967,6 +972,72 @@ cloud_mode_input_v2 = ["cloud_mode"]
 configurable_context_window = []
 handoff_cloud_cloud = ["cloud_mode_setup_v2"]
 git_credential_refresh = []
+
+# Personal lightweight build — core terminal + multi-profile + light AI.
+# Build with: cargo bundle --bin warp-lstr --no-default-features --features lstr
+lstr = [
+    # --- Core terminal ---
+    "ligatures",
+    "minimalist_ui",
+    "shell_selector",
+    "rect_selection",
+    "trim_trailing_blank_lines",
+    "clear_autosuggestion_on_escape",
+    "validate_autosuggestions",
+    "settings_file",
+    "full_screen_zen_mode",
+    "kitty_keyboard_protocol",
+    "kitty_images",
+    "ui_zoom",
+    "render_continuous_block_selections_with_single_border",
+    "tab_close_button_on_left",
+    "new_tab_styling",
+    "directory_tab_colors",
+    "vertical_tabs",
+    "vertical_tabs_summary_mode",
+    "tab_configs",
+    "undo_closed_panes",
+    "configurable_toolbar",
+    "global_search",
+    "loginless_conversion",
+    # --- Multi-project / multi-org ---
+    "multi_profile",
+    "profiles_design_revamp",
+    "workflow_aliases",
+    "dynamic_workflow_enums",
+    "warp_packs",
+    # --- Developer tools ---
+    "vim_code_editor",
+    "file_tree",
+    "code_find_replace",
+    "allow_opening_file_links_using_editor_env",
+    "command_correction_key",
+    "autoupdate",
+    "autoupdate_ui_revamp",
+    "markdown_tables",
+    "markdown_mermaid",
+    # --- Light AI (local, no cloud) ---
+    "agent_mode",
+    "agent_mode_primary_xml",
+    "agent_mode_pre_plan_xml",
+    "render_agent_mode_output_markdown",
+    "ai_context_menu",
+    "ai_rules",
+    "grep_tool",
+    "file_retrieval_tools",
+    "mcp_server",
+    "agent_view",
+    "inline_slash_commands",
+]
+
+[package.metadata.bundle.bin.warp-lstr]
+category = "public.app-category.developer-tools"
+copyright = "© 2025, Denver Technologies, Inc"
+identifier = "dev.warp.WarpLstr"
+name = "WarpLstr"
+resources = ["assets/onboarding"]
+icon = ["channels/oss/icon/no-padding/512x512.png", "channels/oss/icon/no-padding/icon.ico"]
+short_description = "Lightweight personal Warp build."
 
 [package.metadata.bundle.bin.warp-oss]
 category = "public.app-category.developer-tools"
