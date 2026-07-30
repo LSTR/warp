@@ -23,7 +23,7 @@ path = "src/bin/oss.rs"
 test = false
 
 [[bin]]
-name = "warp-lstr"
+name = "lstr-warp"
 path = "src/bin/oss.rs"
 test = false
 
@@ -974,7 +974,7 @@ handoff_cloud_cloud = ["cloud_mode_setup_v2"]
 git_credential_refresh = []
 
 # Personal lightweight build — core terminal + multi-profile + light AI.
-# Build with: cargo bundle --bin warp-lstr --no-default-features --features lstr
+# Build with: cargo bundle --bin lstr-warp --no-default-features --features lstr
 lstr = [
     # --- Core terminal ---
     "ligatures",
@@ -1032,11 +1032,11 @@ lstr = [
     "inline_slash_commands",
 ]
 
-[package.metadata.bundle.bin.warp-lstr]
+[package.metadata.bundle.bin.lstr-warp]
 category = "public.app-category.developer-tools"
 copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.WarpLstr"
-name = "WarpLstr"
+identifier = "dev.warp.LstrWarp"
+name = "LstrWarp"
 resources = ["assets/onboarding"]
 icon = ["channels/oss/icon/no-padding/512x512.png", "channels/oss/icon/no-padding/icon.ico"]
 short_description = "Lightweight personal Warp build."

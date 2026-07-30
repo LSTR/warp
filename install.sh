@@ -2,7 +2,7 @@
 set -eo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-APP_NAME="WarpLstr"
+APP_NAME="LstrWarp"
 BUNDLE_PATH="$REPO_ROOT/target/debug/bundle/osx/${APP_NAME}.app"
 INSTALL_PATH="/Applications/${APP_NAME}.app"
 
@@ -49,14 +49,36 @@ fi
 # ── 7. Build ──────────────────────────────────────────────────────────────────
 echo "→ Building (this will take a while on first run)..."
 cd "$REPO_ROOT/app"
-cargo bundle --bin warp-lstr --no-default-features --features lstr
+cargo bundle --bin lstr-warp --no-default-features --features lstr
 
 # ── 9. Install to /Applications ───────────────────────────────────────────────
 echo "→ Installing to /Applications/..."
 rm -rf "$INSTALL_PATH"
 cp -r "$BUNDLE_PATH" "$INSTALL_PATH"
 
-# ── 10. Launch ────────────────────────────────────────────────────────────────
+# ── 10. Code signing ──────────────────────────────────────────────────────────
+# cargo bundle leaves the app ad-hoc (linker-signed) with an unstable identifier,
+# so its cdhash changes on every build. macOS TCC keys privacy grants to the
+# code-signing identity, so an ad-hoc app is treated as a brand-new app after
+# each rebuild and re-prompts for Documents/Desktop access every time.
+#
+# Signing with a real certificate gives a designated requirement based on
+# identifier + certificate instead of the cdhash, so the grants stick.
+echo "→ Code signing..."
+CODESIGN_ID="${CODESIGN_ID:-$(security find-identity -v -p codesigning 2>/dev/null \
+    | grep "Apple Development" | head -1 | sed -E 's/.*"(.*)"$/\1/')}"
+
+if [[ -n "$CODESIGN_ID" ]]; then
+    codesign --force --identifier "dev.warp.${APP_NAME}" --timestamp=none \
+        --sign "$CODESIGN_ID" "$INSTALL_PATH"
+    echo "  signed with: $CODESIGN_ID"
+else
+    echo "  ⚠ No signing identity found — falling back to ad-hoc."
+    echo "    macOS will re-ask for file-access permissions after every rebuild."
+    codesign --force --identifier "dev.warp.${APP_NAME}" --sign - "$INSTALL_PATH"
+fi
+
+# ── 11. Launch ────────────────────────────────────────────────────────────────
 echo
 echo "Done! Launching ${APP_NAME}..."
 open "$INSTALL_PATH"
